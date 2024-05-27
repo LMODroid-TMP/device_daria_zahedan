@@ -7,3 +7,6 @@ type sysfs_touchgesture, sysfs_type, fs_type;
 # Charger
 type sysfs_charge_disable, sysfs_type, fs_type;
 type sysfs_charge_current, sysfs_type, fs_type;
+
+# Torch
+type sysfs_torch, sysfs_type, fs_type;

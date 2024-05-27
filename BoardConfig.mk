@@ -68,6 +68,9 @@ BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 BOARD_MKBOOTIMG_ARGS += --board ""
 
+# Camera
+TARGET_CAMERA_SERVICE_EXT_LIB := //$(DEVICE_PATH):libcameraservice_extension.zahedan
+
 # Display
 TARGET_SCREEN_DENSITY := 440
 TARGET_HAS_MTK_SURFACEFLINGER := true
