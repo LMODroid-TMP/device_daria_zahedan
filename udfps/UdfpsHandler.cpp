@@ -1,93 +1,53 @@
 /*
- * Copyright (C) 2022 The LineageOS Project
+ * Copyright (C) 2024 The LineageOS Project
  *
  * SPDX-License-Identifier: Apache-2.0
  */
 
-#define LOG_TAG "UdfpsHandler.xiaomi_sdm845"
-
 #include "UdfpsHandler.h"
 
-#include <android-base/logging.h>
-#include <fcntl.h>
-#include <poll.h>
-#include <thread>
 #include <unistd.h>
-
-#define COMMAND_NIT 10
-#define PARAM_NIT_FOD 1
-#define PARAM_NIT_NONE 0
-
-#define FOD_UI_PATH "/sys/devices/platform/soc/soc:qcom,dsi-display-primary/fod_ui"
-
-static bool readBool(int fd) {
-    char c;
-    int rc;
-
-    rc = lseek(fd, 0, SEEK_SET);
-    if (rc) {
-        LOG(ERROR) << "failed to seek fd, err: " << rc;
-        return false;
-    }
-
-    rc = read(fd, &c, sizeof(char));
-    if (rc != 1) {
-        LOG(ERROR) << "failed to read bool from fd, err: " << rc;
-        return false;
-    }
-
-    return c != '0';
-}
 
 class XiaomiUdfpsHander : public UdfpsHandler {
   public:
     void init(fingerprint_device_t *device) {
         mDevice = device;
-
-        std::thread([this]() {
-            int fd = open(FOD_UI_PATH, O_RDONLY);
-            if (fd < 0) {
-                LOG(ERROR) << "failed to open fd, err: " << fd;
-                return;
-            }
-
-            struct pollfd fodUiPoll = {
-                    .fd = fd,
-                    .events = POLLERR | POLLPRI,
-                    .revents = 0,
-            };
-
-            while (true) {
-                int rc = poll(&fodUiPoll, 1, -1);
-                if (rc < 0) {
-                    LOG(ERROR) << "failed to poll fd, err: " << rc;
-                    continue;
-                }
-
-                mDevice->extCmd(mDevice, COMMAND_NIT,
-                                readBool(fd) ? PARAM_NIT_FOD : PARAM_NIT_NONE);
-            }
-        }).detach();
+        goodixExtCmd = reinterpret_cast<int32_t (*)(struct fingerprint_device __unused *, uint32_t, uint32_t)>(mDevice->reserved[0]);
     }
 
     void onFingerDown(uint32_t /*x*/, uint32_t /*y*/, float /*minor*/, float /*major*/) {
-        // nothing
+        usleep(50*1000);
+        goodixExtCmd(0, 1, 0);
     }
 
     void onFingerUp() {
-        // nothing
+        goodixExtCmd(0, 0, 0);
     }
 
-    void onAcquired(int32_t /*result*/, int32_t /*vendorCode*/) {
-        // nothing
+    void onAcquired(int32_t result, int32_t /*vendorCode*/) {
+       // Nothing
+    }
+
+    void preEnroll() {
+        // Nothing
+    }
+
+    void enroll() {
+        // Nothing
+    }
+
+    void postEnroll() {
+        // Nothing
     }
 
     void cancel() {
         // nothing
+        goodixExtCmd(0, 0, 0);
     }
 
   private:
     fingerprint_device_t *mDevice;
+    int32_t (*goodixExtCmd)(struct fingerprint_device __unused *, uint32_t, uint32_t);
 };
 
 static UdfpsHandler* create() {

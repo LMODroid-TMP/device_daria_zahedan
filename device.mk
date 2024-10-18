@@ -92,7 +92,8 @@ PRODUCT_PACKAGES += \
 
 # Biometrics
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint-service.xiaomi
+    android.hardware.biometrics.fingerprint-service.xiaomi \
+    libudfpshandler
 
 # Boot control
 PRODUCT_PACKAGES += \
