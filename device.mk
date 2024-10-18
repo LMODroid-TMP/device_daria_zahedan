@@ -87,8 +87,12 @@ PRODUCT_PACKAGES += \
     android.hardware.bluetooth.audio@2.1-impl
 
 # Biometrics
+# PRODUCT_PACKAGES += \
+#     android.hardware.biometrics.fingerprint@2.3-service.zahedan
+
+# Biometrics
 PRODUCT_PACKAGES += \
-    android.hardware.biometrics.fingerprint@2.3-service.zahedan
+    android.hardware.biometrics.fingerprint-service.xiaomi
 
 # Boot control
 PRODUCT_PACKAGES += \
@@ -423,7 +427,8 @@ PRODUCT_PROPERTY_OVERRIDES += \
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += \
     $(LOCAL_PATH) \
-    hardware/mediatek
+    hardware/mediatek \
+    hardware/xiaomi
 
 # Soundtrigger
 PRODUCT_PACKAGES += \

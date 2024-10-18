@@ -9,6 +9,7 @@
 
 # Fingerprint
 /(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint@2\.3-service\.zahedan                          u:object_r:hal_fingerprint_default_exec:s0
+/(vendor|system/vendor)/bin/hw/android\.hardware\.biometrics\.fingerprint-service\.xiaomi                                u:object_r:hal_fingerprint_default_exec:s0
 
 # Wifi
 /(vendor|system/vendor)/bin/wifimacaddr                                                                                  u:object_r:wifimacaddr_exec:s0
